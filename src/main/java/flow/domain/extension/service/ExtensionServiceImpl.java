@@ -26,6 +26,7 @@ public class ExtensionServiceImpl implements ExtensionService {
     private static final List<String> DEFAULT_FIXED_EXTENSIONS = Arrays.asList(
             "bat", "cmd", "com", "cpl", "exe", "scr", "js"
     );
+
     private static final int MAX_CUSTOM_EXTENSIONS = 200;
     private static final int MAX_FIXED_EXTENSIONS = 10;
     private static final int MAX_EXTENSION_LENGTH = 20;
@@ -45,7 +46,7 @@ public class ExtensionServiceImpl implements ExtensionService {
     @Override
     public FixedExtension updateFixedExtensionStatus(String extension, boolean isBlocked) {
         FixedExtension fixedExtension = fixedExtensionRepository.findByExtension(extension.toLowerCase())
-                .orElseThrow(() -> new BusinessException("고정 확장자를 찾을 수 없습니다: " + extension));
+                .orElseThrow(() -> BusinessException.notFound("고정 확장자를 찾을 수 없습니다: " + extension));
 
         fixedExtension.updateBlockStatus(isBlocked);
         return fixedExtensionRepository.save(fixedExtension);
@@ -56,19 +57,19 @@ public class ExtensionServiceImpl implements ExtensionService {
         String normalizedExtension = extension.toLowerCase().trim();
 
         if (!validateExtension(normalizedExtension)) {
-            throw new BusinessException("유효하지 않은 확장자입니다: " + extension);
+            throw BusinessException.badRequest("유효하지 않은 확장자입니다: " + extension);
         }
 
-        if (fixedExtensionRepository.countFixedExtensions() >= MAX_FIXED_EXTENSIONS) {
-            throw new BusinessException("고정 확장자는 최대 " + MAX_FIXED_EXTENSIONS + "개까지 추가할 수 있습니다.");
+        if (fixedExtensionRepository.findAll().size() >= MAX_FIXED_EXTENSIONS) {
+            throw BusinessException.badRequest("고정 확장자는 최대 " + MAX_FIXED_EXTENSIONS + "개까지 추가할 수 있습니다.");
         }
 
         if (fixedExtensionRepository.existsByExtension(normalizedExtension)) {
-            throw new BusinessException("이미 존재하는 고정 확장자입니다: " + extension);
+            throw BusinessException.conflict("이미 존재하는 고정 확장자입니다: " + extension);
         }
 
         if (customExtensionRepository.existsByExtension(normalizedExtension)) {
-            throw new BusinessException("이미 커스텀 확장자에 존재합니다: " + extension);
+            throw BusinessException.conflict("이미 커스텀 확장자에 존재합니다: " + extension);
         }
 
         FixedExtension fixedExtension = FixedExtension.builder()
@@ -83,7 +84,7 @@ public class ExtensionServiceImpl implements ExtensionService {
     @Override
     public void deleteFixedExtension(Long id) {
         FixedExtension fixedExtension = fixedExtensionRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("고정 확장자를 찾을 수 없습니다."));
+                .orElseThrow(() -> BusinessException.notFound("고정 확장자를 찾을 수 없습니다."));
 
         fixedExtensionRepository.delete(fixedExtension);
     }
@@ -93,19 +94,19 @@ public class ExtensionServiceImpl implements ExtensionService {
         String normalizedExtension = extension.toLowerCase().trim();
 
         if (!validateExtension(normalizedExtension)) {
-            throw new BusinessException("유효하지 않은 확장자입니다: " + extension);
+            throw BusinessException.badRequest("유효하지 않은 확장자입니다: " + extension);
         }
 
-        if (customExtensionRepository.countCustomExtensions() >= MAX_CUSTOM_EXTENSIONS) {
-            throw new BusinessException("커스텀 확장자는 최대 " + MAX_CUSTOM_EXTENSIONS + "개까지 추가할 수 있습니다.");
+        if (customExtensionRepository.findAll().size() >= MAX_CUSTOM_EXTENSIONS) {
+            throw BusinessException.badRequest("커스텀 확장자는 최대 " + MAX_CUSTOM_EXTENSIONS + "개까지 추가할 수 있습니다.");
         }
 
         if (fixedExtensionRepository.existsByExtension(normalizedExtension)) {
-            throw new BusinessException("이미 고정 확장자에 존재합니다: " + extension);
+            throw BusinessException.conflict("이미 고정 확장자에 존재합니다: " + extension);
         }
 
         if (customExtensionRepository.existsByExtension(normalizedExtension)) {
-            throw new BusinessException("이미 추가된 커스텀 확장자입니다: " + extension);
+            throw BusinessException.conflict("이미 추가된 커스텀 확장자입니다: " + extension);
         }
 
         CustomExtension customExtension = CustomExtension.builder()
@@ -118,7 +119,7 @@ public class ExtensionServiceImpl implements ExtensionService {
     @Override
     public void deleteCustomExtension(Long id) {
         CustomExtension customExtension = customExtensionRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("커스텀 확장자를 찾을 수 없습니다."));
+                .orElseThrow(() -> BusinessException.notFound("커스텀 확장자를 찾을 수 없습니다."));
 
         customExtensionRepository.delete(customExtension);
     }
@@ -207,17 +208,6 @@ public class ExtensionServiceImpl implements ExtensionService {
         return trimmed.matches("^[a-zA-Z0-9]+$");
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public long getCustomExtensionCount() {
-        return customExtensionRepository.countCustomExtensions();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public long getFixedExtensionCount() {
-        return fixedExtensionRepository.countFixedExtensions();
-    }
 
     private String getExtensionDescription(String extension) {
         return switch (extension) {

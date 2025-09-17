@@ -22,6 +22,4 @@ public interface CustomExtensionRepository extends JpaRepository<CustomExtension
     @Query("SELECT c.extension FROM CustomExtension c WHERE c.isBlocked = true")
     List<String> findBlockedExtensions();
 
-    @Query("SELECT COUNT(c) FROM CustomExtension c")
-    long countCustomExtensions();
 }

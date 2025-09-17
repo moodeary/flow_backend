@@ -22,6 +22,4 @@ public interface FixedExtensionRepository extends JpaRepository<FixedExtension, 
     @Query("SELECT f.extension FROM FixedExtension f WHERE f.isBlocked = true")
     List<String> findBlockedExtensions();
 
-    @Query("SELECT COUNT(f) FROM FixedExtension f")
-    long countFixedExtensions();
 }

@@ -31,7 +31,4 @@ public interface ExtensionService {
 
     boolean validateExtension(String extension);
 
-    long getCustomExtensionCount();
-
-    long getFixedExtensionCount();
 }

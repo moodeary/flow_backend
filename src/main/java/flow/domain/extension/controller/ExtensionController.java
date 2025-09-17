@@ -5,13 +5,13 @@ import flow.domain.extension.entity.CustomExtension;
 import flow.domain.extension.service.ExtensionService;
 import flow.domain.extension.entity.FixedExtension;
 import flow.domain.extension.dto.*;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/extensions")
@@ -23,40 +23,22 @@ public class ExtensionController {
     private final ExtensionService extensionService;
 
     @GetMapping("/fixed")
-    public ResponseEntity<ResponseApi<Map<String, Object>>> getFixedExtensions() {
+    public ResponseEntity<ResponseApi<List<FixedExtension>>> getFixedExtensions() {
         List<FixedExtension> fixedExtensions = extensionService.getAllFixedExtensions();
-        List<FixedExtensionResponse> responses = fixedExtensions.stream()
-                .map(FixedExtensionResponse::from)
-                .toList();
-        long count = extensionService.getFixedExtensionCount();
-
-        Map<String, Object> result = Map.of(
-                "extensions", responses,
-                "count", count,
-                "maxCount", 10
-        );
-        return ResponseEntity.ok(ResponseApi.success(result));
+        String message = String.format("고정 확장자 %d/%d", fixedExtensions.size(), 10);
+        return ResponseEntity.ok(ResponseApi.success(fixedExtensions, message));
     }
 
     @GetMapping("/custom")
-    public ResponseEntity<ResponseApi<Map<String, Object>>> getCustomExtensions() {
+    public ResponseEntity<ResponseApi<List<CustomExtension>>> getCustomExtensions() {
         List<CustomExtension> customExtensions = extensionService.getAllCustomExtensions();
-        List<CustomExtensionResponse> responses = customExtensions.stream()
-                .map(CustomExtensionResponse::from)
-                .toList();
-        long count = extensionService.getCustomExtensionCount();
-
-        Map<String, Object> result = Map.of(
-                "extensions", responses,
-                "count", count,
-                "maxCount", 200
-        );
-        return ResponseEntity.ok(ResponseApi.success(result));
+        String message = String.format("커스텀 확장자 %d/%d", customExtensions.size(), 200);
+        return ResponseEntity.ok(ResponseApi.success(customExtensions, message));
     }
 
     @PostMapping("/fixed")
     public ResponseEntity<ResponseApi<FixedExtensionResponse>> addFixedExtension(
-             @RequestBody FixedExtensionRequest request) {
+            @Valid @RequestBody FixedExtensionRequest request) {
 
         FixedExtension fixedExtension = extensionService.addFixedExtension(
                 request.getExtension(), request.getDescription());
@@ -67,10 +49,9 @@ public class ExtensionController {
     @PutMapping("/fixed/{extension}")
     public ResponseEntity<ResponseApi<FixedExtensionResponse>> updateFixedExtensionStatus(
             @PathVariable String extension,
-            @Valid @RequestBody ExtensionStatusRequest request) {
+            @RequestParam Boolean isBlocked) {
 
-        FixedExtension updatedExtension = extensionService.updateFixedExtensionStatus(
-                extension, request.getIsBlocked());
+        FixedExtension updatedExtension = extensionService.updateFixedExtensionStatus(extension, isBlocked);
         FixedExtensionResponse response = FixedExtensionResponse.from(updatedExtension);
         return ResponseEntity.ok(ResponseApi.success(response));
     }
@@ -83,7 +64,7 @@ public class ExtensionController {
 
     @PostMapping("/custom")
     public ResponseEntity<ResponseApi<CustomExtensionResponse>> addCustomExtension(
-             @RequestBody ExtensionRequest request) {
+            @Valid @RequestBody CustomExtensionRequest request) {
 
         CustomExtension customExtension = extensionService.addCustomExtension(request.getExtension());
         CustomExtensionResponse response = CustomExtensionResponse.from(customExtension);
@@ -97,11 +78,22 @@ public class ExtensionController {
     }
 
     @GetMapping("/check/{extension}")
-    public ResponseEntity<ResponseApi<ExtensionCheckResponse>> checkExtension(@PathVariable String extension) {
+    public ResponseEntity<ResponseApi<Boolean>> checkExtension(@PathVariable String extension) {
         boolean isBlocked = extensionService.isExtensionBlocked(extension);
         String blockType = extensionService.getExtensionBlockType(extension);
-        ExtensionCheckResponse response = ExtensionCheckResponse.of(extension, isBlocked, blockType);
-        return ResponseEntity.ok(ResponseApi.success(response));
+
+        String message;
+        if (isBlocked) {
+            message = switch (blockType) {
+                case "fixed" -> extension + "는 고정 확장자에 있습니다.";
+                case "custom" -> extension + "는 커스텀 확장자에 있습니다.";
+                default -> extension + "는 차단된 확장자입니다.";
+            };
+        } else {
+            message = extension + "는 허용된 확장자입니다.";
+        }
+
+        return ResponseEntity.ok(ResponseApi.success(isBlocked, message));
     }
 
     @PostMapping("/initialize")
