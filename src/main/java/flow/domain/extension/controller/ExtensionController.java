@@ -1,6 +1,7 @@
 package flow.domain.extension.controller;
 
 import flow.common.dto.ResponseApi;
+import flow.common.exception.BusinessException;
 import flow.domain.extension.entity.CustomExtension;
 import flow.domain.extension.service.ExtensionService;
 import flow.domain.extension.entity.FixedExtension;
@@ -17,7 +18,6 @@ import java.util.List;
 @RequestMapping("/api/extensions")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "*")
 public class ExtensionController {
 
     private final ExtensionService extensionService;
@@ -39,42 +39,64 @@ public class ExtensionController {
     @PostMapping("/fixed")
     public ResponseEntity<ResponseApi<FixedExtensionResponse>> addFixedExtension(
             @Valid @RequestBody FixedExtensionRequest request) {
-
-        FixedExtension fixedExtension = extensionService.addFixedExtension(
-                request.getExtension(), request.getDescription());
-        FixedExtensionResponse response = FixedExtensionResponse.from(fixedExtension);
-        return ResponseEntity.ok(ResponseApi.success(response));
+        try {
+            FixedExtension fixedExtension = extensionService.addFixedExtension(
+                    request.getExtension(), request.getDescription());
+            FixedExtensionResponse response = FixedExtensionResponse.from(fixedExtension);
+            return ResponseEntity.ok(ResponseApi.success(response));
+        } catch (BusinessException e) {
+            return ResponseEntity.status(e.getStatus())
+                    .body(ResponseApi.error(e.getMessage(), e.getErrorCode()));
+        }
     }
 
     @PutMapping("/fixed/{extension}")
     public ResponseEntity<ResponseApi<FixedExtensionResponse>> updateFixedExtensionStatus(
             @PathVariable String extension,
             @RequestParam Boolean isBlocked) {
-
-        FixedExtension updatedExtension = extensionService.updateFixedExtensionStatus(extension, isBlocked);
-        FixedExtensionResponse response = FixedExtensionResponse.from(updatedExtension);
-        return ResponseEntity.ok(ResponseApi.success(response));
+        try {
+            FixedExtension updatedExtension = extensionService.updateFixedExtensionStatus(extension, isBlocked);
+            FixedExtensionResponse response = FixedExtensionResponse.from(updatedExtension);
+            return ResponseEntity.ok(ResponseApi.success(response));
+        } catch (BusinessException e) {
+            return ResponseEntity.status(e.getStatus())
+                    .body(ResponseApi.error(e.getMessage(), e.getErrorCode()));
+        }
     }
 
     @DeleteMapping("/fixed/{id}")
     public ResponseEntity<ResponseApi<Void>> deleteFixedExtension(@PathVariable Long id) {
-        extensionService.deleteFixedExtension(id);
-        return ResponseEntity.ok(ResponseApi.success(null));
+        try {
+            extensionService.deleteFixedExtension(id);
+            return ResponseEntity.ok(ResponseApi.success(null));
+        } catch (BusinessException e) {
+            return ResponseEntity.status(e.getStatus())
+                    .body(ResponseApi.error(e.getMessage(), e.getErrorCode()));
+        }
     }
 
     @PostMapping("/custom")
     public ResponseEntity<ResponseApi<CustomExtensionResponse>> addCustomExtension(
             @Valid @RequestBody CustomExtensionRequest request) {
-
-        CustomExtension customExtension = extensionService.addCustomExtension(request.getExtension());
-        CustomExtensionResponse response = CustomExtensionResponse.from(customExtension);
-        return ResponseEntity.ok(ResponseApi.success(response));
+        try {
+            CustomExtension customExtension = extensionService.addCustomExtension(request.getExtension());
+            CustomExtensionResponse response = CustomExtensionResponse.from(customExtension);
+            return ResponseEntity.ok(ResponseApi.success(response));
+        } catch (BusinessException e) {
+            return ResponseEntity.status(e.getStatus())
+                    .body(ResponseApi.error(e.getMessage(), e.getErrorCode()));
+        }
     }
 
     @DeleteMapping("/custom/{id}")
     public ResponseEntity<ResponseApi<Void>> deleteCustomExtension(@PathVariable Long id) {
-        extensionService.deleteCustomExtension(id);
-        return ResponseEntity.ok(ResponseApi.success(null));
+        try {
+            extensionService.deleteCustomExtension(id);
+            return ResponseEntity.ok(ResponseApi.success(null));
+        } catch (BusinessException e) {
+            return ResponseEntity.status(e.getStatus())
+                    .body(ResponseApi.error(e.getMessage(), e.getErrorCode()));
+        }
     }
 
     @GetMapping("/check/{extension}")
