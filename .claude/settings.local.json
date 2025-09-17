@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/Choonsik/Desktop/**)",
+      "Bash(dir:*)",
+      "Read(//c/Users/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
