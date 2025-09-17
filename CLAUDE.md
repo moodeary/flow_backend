@@ -4,6 +4,7 @@
 
 
 ## 개발 규칙 및 가이드라인
+- 
 
 ### 파일 생성 규칙
 - 필요한 경우에만 새 파일 생성
@@ -15,14 +16,12 @@
 - 보안 모범 사례 준수
 
 ## 작업 히스토리
-- 2025-09-13: CLAUDE.md 파일 생성
-- 2025-09-13: 프로젝트 기본 구조 설정 완료
-  - BaseEntity 생성 (생성일, 수정일 자동 관리)
+- 프로젝트 기본 구조 설정 완료
+  - BaseEntity 생성
   - JPA Auditing 활성화
   - WebConfig CORS 설정
-- 2025-09-13: 전체 백엔드 템플릿 구현 완료
-  - User 도메인 완성 (Repository, Service Interface/Impl, Controller, DTOs)
-  - Inventory 도메인 완성 (Repository, Service Interface/Impl, Controller, DTOs)
+- 전체 백엔드 템플릿 구현 완료
+  - 도메인 (Repository, Service Interface/Impl, Controller, DTOs)
   - 인터페이스 기반 Service 구조 적용
+  - JPA 설계
 
-## 프로젝트 요구사항
