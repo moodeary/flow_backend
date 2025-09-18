@@ -19,4 +19,4 @@ logging:
   level:
     com.basic.template.backend_template: INFO
     org.springframework.security: WARN
-    root: WARN
+    root: INFO
