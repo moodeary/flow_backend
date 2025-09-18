@@ -27,6 +27,10 @@ RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
 # Create user for security
 RUN addgroup --system spring && adduser --system spring --ingroup spring
+
+# Create logs directory with proper permissions
+RUN mkdir -p logs && chown -R spring:spring logs
+
 USER spring:spring
 
 # Copy JAR from build stage
