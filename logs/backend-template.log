@@ -1810,3 +1810,8 @@ Caused by: java.sql.SQLSyntaxErrorException: (conn=1660) Unknown database 'flow'
 2025-09-18 16:04:38 [http-nio-8080-exec-7] WARN  f.c.exception.GlobalExceptionHandler - Validation Exception: {extension=확장자는 영문자와 숫자만 입력 가능합니다.}
 2025-09-18 16:04:39 [http-nio-8080-exec-8] WARN  f.c.exception.GlobalExceptionHandler - Validation Exception: {extension=확장자는 영문자와 숫자만 입력 가능합니다.}
 2025-09-18 16:04:49 [http-nio-8080-exec-3] WARN  f.c.exception.GlobalExceptionHandler - Validation Exception: {extension=확장자는 영문자와 숫자만 입력 가능합니다.}
+2025-09-18 16:22:10 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-09-18 16:22:10 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-09-18 16:22:10 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-09-18 16:22:10 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-09-18 16:22:10 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
