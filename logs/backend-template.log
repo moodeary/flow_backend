@@ -1807,3 +1807,6 @@ Caused by: java.sql.SQLSyntaxErrorException: (conn=1660) Unknown database 'flow'
 2025-09-18 15:52:19 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
 2025-09-18 15:52:19 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
 2025-09-18 15:52:19 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2025-09-18 16:04:38 [http-nio-8080-exec-7] WARN  f.c.exception.GlobalExceptionHandler - Validation Exception: {extension=확장자는 영문자와 숫자만 입력 가능합니다.}
+2025-09-18 16:04:39 [http-nio-8080-exec-8] WARN  f.c.exception.GlobalExceptionHandler - Validation Exception: {extension=확장자는 영문자와 숫자만 입력 가능합니다.}
+2025-09-18 16:04:49 [http-nio-8080-exec-3] WARN  f.c.exception.GlobalExceptionHandler - Validation Exception: {extension=확장자는 영문자와 숫자만 입력 가능합니다.}

@@ -2,7 +2,7 @@ spring:
   datasource:
     url: ${DB_URL:jdbc:mariadb://mariadb:3306/flow?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul}
     driver-class-name: org.mariadb.jdbc.Driver
-    username: ${DB_USERNAME:root}
+    username: ${DB_USERNAME:flow_user}
     password: ${DB_PASSWORD:!jelly0403}
 
   jpa:
