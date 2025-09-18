@@ -15,10 +15,6 @@ spring:
         dialect: org.hibernate.dialect.MariaDBDialect
 
 
-app:
-  frontend:
-    url: ${FRONTEND_URL:http://frontend:3000}
-
 logging:
   level:
     com.basic.template.backend_template: INFO

@@ -14,11 +14,6 @@ spring:
         format_sql: false
         dialect: org.hibernate.dialect.MariaDBDialect
 
-
-app:
-  frontend:
-    url: ${FRONTEND_URL:http://localhost:3002}
-
 logging:
   level:
     com.basic.template.backend_template: INFO

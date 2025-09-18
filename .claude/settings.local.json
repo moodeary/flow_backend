@@ -3,7 +3,9 @@
     "allow": [
       "Read(//c/Users/Choonsik/Desktop/**)",
       "Bash(dir:*)",
-      "Read(//c/Users/**)"
+      "Read(//c/Users/**)",
+      "Read(//Users/sucom/source/**)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []
