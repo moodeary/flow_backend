@@ -161,4 +161,27 @@ public class ExtensionController {
         extensionService.initializeFixedExtensions();
         return ResponseEntity.ok(ResponseApi.success("고정 확장자가 초기화되었습니다."));
     }
+
+    @DeleteMapping("/custom/all")
+    public ResponseEntity<ResponseApi<Void>> deleteAllCustomExtensions() {
+        try {
+            int deletedCount = extensionService.deleteAllCustomExtensions();
+            String message = String.format("모든 커스텀 확장자(%d개)가 삭제되었습니다.", deletedCount);
+            return ResponseEntity.ok(ResponseApi.success(null, message));
+        } catch (BusinessException e) {
+            return ResponseEntity.status(e.getStatus())
+                    .body(ResponseApi.error(e.getMessage(), e.getErrorCode()));
+        }
+    }
+
+    @PostMapping("/fixed/reset")
+    public ResponseEntity<ResponseApi<String>> resetFixedExtensions() {
+        try {
+            extensionService.resetFixedExtensions();
+            return ResponseEntity.ok(ResponseApi.success("고정 확장자가 기본 상태로 초기화되었습니다."));
+        } catch (BusinessException e) {
+            return ResponseEntity.status(e.getStatus())
+                    .body(ResponseApi.error(e.getMessage(), e.getErrorCode()));
+        }
+    }
 }

@@ -218,6 +218,40 @@ public class ExtensionServiceImpl implements ExtensionService {
     }
 
 
+    @Override
+    @Transactional
+    public int deleteAllCustomExtensions() {
+        List<CustomExtension> allCustomExtensions = customExtensionRepository.findAll();
+        int count = allCustomExtensions.size();
+        customExtensionRepository.deleteAll();
+        log.info("모든 커스텀 확장자 삭제됨: {}개", count);
+        return count;
+    }
+
+    @Override
+    @Transactional
+    public void resetFixedExtensions() {
+        // 모든 고정 확장자 삭제
+        fixedExtensionRepository.deleteAll();
+        fixedExtensionRepository.flush(); // 강제로 DB에 반영
+        log.info("모든 고정 확장자 삭제됨");
+
+        // 기본 확장자 추가
+        String[] defaultExtensions = {"bat", "cmd", "com", "cpl", "exe", "scr", "js"};
+        for (String extension : defaultExtensions) {
+            // 중복 체크 후 추가
+            if (!fixedExtensionRepository.existsByExtension(extension)) {
+                FixedExtension fixedExtension = FixedExtension.builder()
+                        .extension(extension)
+                        .description(getExtensionDescription(extension))
+                        .isBlocked(false)
+                        .build();
+                fixedExtensionRepository.save(fixedExtension);
+            }
+        }
+        log.info("기본 고정 확장자 {}개 초기화 완료", defaultExtensions.length);
+    }
+
     private String getExtensionDescription(String extension) {
         return switch (extension) {
             case "bat" -> "배치 파일";

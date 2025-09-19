@@ -33,4 +33,8 @@ public interface ExtensionService {
 
     boolean validateExtension(String extension);
 
+    int deleteAllCustomExtensions();
+
+    void resetFixedExtensions();
+
 }
