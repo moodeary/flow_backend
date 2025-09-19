@@ -64,6 +64,20 @@ public class ExtensionController {
         }
     }
 
+    @PutMapping("/fixed")
+    public ResponseEntity<ResponseApi<FixedExtensionResponse>> updateFixedExtension(
+            @Valid @RequestBody FixedExtensionRequest request) {
+        try {
+            FixedExtension updatedExtension = extensionService.updateFixedExtensionStatus(
+                    request.getExtension(), request.getIsBlocked());
+            FixedExtensionResponse response = FixedExtensionResponse.from(updatedExtension);
+            return ResponseEntity.ok(ResponseApi.success(response));
+        } catch (BusinessException e) {
+            return ResponseEntity.status(e.getStatus())
+                    .body(ResponseApi.error(e.getMessage(), e.getErrorCode()));
+        }
+    }
+
     @DeleteMapping("/fixed/{id}")
     public ResponseEntity<ResponseApi<Void>> deleteFixedExtension(@PathVariable Long id) {
         try {
@@ -99,6 +113,17 @@ public class ExtensionController {
         }
     }
 
+    @DeleteMapping("/custom/extension/{extension}")
+    public ResponseEntity<ResponseApi<Void>> deleteCustomExtensionByExtension(@PathVariable String extension) {
+        try {
+            extensionService.deleteCustomExtensionByExtension(extension);
+            return ResponseEntity.ok(ResponseApi.success(null, extension + " 커스텀 확장자가 삭제되었습니다."));
+        } catch (BusinessException e) {
+            return ResponseEntity.status(e.getStatus())
+                    .body(ResponseApi.error(e.getMessage(), e.getErrorCode()));
+        }
+    }
+
     @GetMapping("/check/{extension}")
     public ResponseEntity<ResponseApi<Boolean>> checkExtension(@PathVariable String extension) {
         boolean isBlocked = extensionService.isExtensionBlocked(extension);
@@ -116,6 +141,19 @@ public class ExtensionController {
         }
 
         return ResponseEntity.ok(ResponseApi.success(isBlocked, message));
+    }
+
+    @GetMapping("/type/{extension}")
+    public ResponseEntity<ResponseApi<String>> getExtensionType(@PathVariable String extension) {
+        String extensionType = extensionService.getExtensionBlockType(extension);
+
+        String message = switch (extensionType) {
+            case "fixed" -> extension + "는 고정 확장자입니다.";
+            case "custom" -> extension + "는 커스텀 확장자입니다.";
+            default -> extension + "는 등록되지 않은 확장자입니다.";
+        };
+
+        return ResponseEntity.ok(ResponseApi.success(extensionType, message));
     }
 
     @PostMapping("/initialize")

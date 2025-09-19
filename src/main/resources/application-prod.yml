@@ -14,9 +14,22 @@ spring:
         format_sql: false
         dialect: org.hibernate.dialect.MariaDBDialect
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+      enabled: true
+      location: /flow/temp
+
+
+app:
+  upload:
+    path: /flow/data
 
 logging:
   level:
     com.basic.template.backend_template: INFO
     org.springframework.security: WARN
     root: INFO
+  file:
+    name: /flow/logs/backend-template.log

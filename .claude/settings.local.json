@@ -6,7 +6,8 @@
       "Read(//c/Users/**)",
       "Read(//Users/sucom/source/**)",
       "Bash(mkdir:*)",
-      "Bash(docker logs:*)"
+      "Bash(docker logs:*)",
+      "Bash(./gradlew:*)"
     ],
     "deny": [],
     "ask": []

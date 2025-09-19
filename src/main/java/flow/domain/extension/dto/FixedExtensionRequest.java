@@ -21,4 +21,6 @@ public class FixedExtensionRequest {
 
     @Size(max = 100, message = "설명은 최대 100자까지 입력 가능합니다.")
     private String description;
+
+    private Boolean isBlocked;
 }

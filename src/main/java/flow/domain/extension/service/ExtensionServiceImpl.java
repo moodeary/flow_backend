@@ -125,6 +125,15 @@ public class ExtensionServiceImpl implements ExtensionService {
     }
 
     @Override
+    public void deleteCustomExtensionByExtension(String extension) {
+        String normalizedExtension = extension.toLowerCase().trim();
+        CustomExtension customExtension = customExtensionRepository.findByExtension(normalizedExtension)
+                .orElseThrow(() -> BusinessException.notFound("커스텀 확장자를 찾을 수 없습니다: " + extension));
+
+        customExtensionRepository.delete(customExtension);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public boolean isExtensionBlocked(String extension) {
         String normalizedExtension = extension.toLowerCase();

@@ -21,6 +21,8 @@ public interface ExtensionService {
 
     void deleteCustomExtension(Long id);
 
+    void deleteCustomExtensionByExtension(String extension);
+
     boolean isExtensionBlocked(String extension);
 
     String getExtensionBlockType(String extension);

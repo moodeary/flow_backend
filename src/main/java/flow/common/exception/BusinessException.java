@@ -39,4 +39,8 @@ public class BusinessException extends RuntimeException {
     public static BusinessException conflict(String message) {
         return new BusinessException(message, HttpStatus.CONFLICT, "CONFLICT");
     }
+
+    public static BusinessException internalServerError(String message) {
+        return new BusinessException(message, HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR");
+    }
 }
